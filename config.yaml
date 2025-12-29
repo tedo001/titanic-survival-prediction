@@ -1,0 +1,28 @@
+# Project Configuration
+project:
+  name: "Titanic Survival Prediction"
+  author: "Your Name"
+  version: "1.0.0"
+
+# Paths
+paths:
+  raw_data: "data/raw/titanic.csv"
+  processed_data: "data/processed/titanic_processed.csv"
+  models: "models/"
+  reports: "reports/"
+
+# Data Processing
+preprocessing:
+  test_size: 0.2
+  random_state: 42
+  features_to_drop: ["PassengerId", "Name", "Ticket", "Cabin"]
+
+# Model Parameters
+model:
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
