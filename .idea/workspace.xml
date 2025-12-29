@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d0940cdc-da1f-4c3e-9985-9bdd77b848ba" name="Changes" comment="data science project update" />
+    <list default="true" id="d0940cdc-da1f-4c3e-9985-9bdd77b848ba" name="Changes" comment="data science project update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.bat" beforeDir="false" afterPath="$PROJECT_DIR$/setup.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -196,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767030940356</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="data science project update">
+      <option name="closed" value="true" />
+      <created>1767030989669</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1767030989669</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

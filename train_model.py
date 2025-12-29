@@ -9,17 +9,17 @@ from sklearn.metrics import accuracy_score
 import joblib
 import os
 
-print("🚀 STARTING TITANIC MODEL TRAINING")
+print("STARTING TITANIC MODEL TRAINING")
 print("=" * 50)
 
 # 1. Create necessary folders
 folders = ['models', 'data', 'data/raw', 'data/processed']
 for folder in folders:
     os.makedirs(folder, exist_ok=True)
-    print(f"📁 Created: {folder}")
+    print(f"Created: {folder}")
 
 # 2. Create synthetic data (no internet needed!)
-print("\n📊 Creating Titanic dataset...")
+print("\nCreating Titanic dataset...")
 
 np.random.seed(42)
 n_passengers = 1000
@@ -78,12 +78,12 @@ df['Age'] = df['Age'].fillna(df['Age'].median())
 df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
 df['IsAlone'] = (df['FamilySize'] == 1).astype(int)
 
-print(f"✅ Created dataset with {len(df)} passengers")
+print(f"Created dataset with {len(df)} passengers")
 print(f"   Survived: {df['Survived'].sum()} ({df['Survived'].mean():.1%})")
 print(f"   Features: {list(df.columns)}")
 
 # 3. Prepare for training
-print("\n🔧 Preparing data...")
+print("\n Preparing data...")
 
 # Features to use
 features = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare',
@@ -101,7 +101,7 @@ print(f"   Training samples: {len(X_train)}")
 print(f"   Test samples: {len(X_test)}")
 
 # 4. Train model
-print("\n🤖 Training Random Forest model...")
+print("\nTraining Random Forest model...")
 
 model = RandomForestClassifier(
     n_estimators=100,
@@ -115,13 +115,13 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-print(f"\n✅ MODEL TRAINED SUCCESSFULLY!")
+print(f"\nMODEL TRAINED SUCCESSFULLY!")
 print(f"   Test Accuracy: {accuracy:.2%}")
 
 # 6. Save model
 model_path = 'models/titanic_model.pkl'
 joblib.dump(model, model_path)
-print(f"\n💾 Model saved to: {model_path}")
+print(f"\nModel saved to: {model_path}")
 
 # Save feature names
 joblib.dump(features, 'models/feature_names.pkl')
@@ -142,7 +142,7 @@ for _, row in importance.head(5).iterrows():
     print(f"   {row['Feature']}: {row['Importance']:.3f}")
 
 # 9. Show example predictions
-print("\n🎯 Example Predictions:")
+print("\nExample Predictions:")
 print("-" * 40)
 
 examples = [
@@ -173,7 +173,7 @@ for ex in examples:
     print(f"   {ex['Desc']}: {result} ({proba:.1%} chance)")
 
 print("\n" + "=" * 50)
-print("🎉 TRAINING COMPLETE!")
+print("TRAINING COMPLETE!")
 print("=" * 50)
 print("\nNext: Run this command:")
 print("   streamlit run app.py")
