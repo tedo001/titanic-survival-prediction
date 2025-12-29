@@ -84,7 +84,7 @@ with st.sidebar:
     """)
 
     # Check if model exists
-    st.header("🔧 System Status")
+    st.header("System Status")
     if os.path.exists('models/titanic_model.pkl'):
         st.success("Model loaded and ready!")
         st.metric("Model Status", "Active")
