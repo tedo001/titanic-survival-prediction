@@ -6,7 +6,7 @@
 
 A machine learning project predicting Titanic passenger survival with a web interface.
 
-## 🚀 Live Demo
+## Live Demo
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://yourusername-titanic-app.streamlit.app/)
 
 ## 📁 Project Structure
