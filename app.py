@@ -68,14 +68,14 @@ with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/RMS_Titanic_3.jpg/600px-RMS_Titanic_3.jpg",
              caption="RMS Titanic - The 'Unsinkable' Ship")
 
-    st.header("📋 Instructions")
+    st.header("Instructions")
     st.markdown("""
     1. Fill in passenger details
     2. Click **Predict Survival** 
     3. See your predicted fate!
     """)
 
-    st.header("📊 Historical Facts")
+    st.header("Historical Facts")
     st.markdown("""
     - **Women**: 74% survival rate
     - **1st Class**: 63% survival rate  
@@ -86,10 +86,10 @@ with st.sidebar:
     # Check if model exists
     st.header("🔧 System Status")
     if os.path.exists('models/titanic_model.pkl'):
-        st.success("✅ Model loaded and ready!")
+        st.success("Model loaded and ready!")
         st.metric("Model Status", "Active")
     else:
-        st.error("❌ Model not found!")
+        st.error("Model not found!")
         st.markdown("""
         **To fix this:**
 
@@ -116,7 +116,7 @@ def load_model():
 model, features = load_model()
 
 # ========== MAIN INPUT FORM ==========
-st.header("📝 Passenger Information")
+st.header("Passenger Information")
 
 col1, col2 = st.columns(2)
 
@@ -172,12 +172,12 @@ with col2:
     )
 
 # ========== PREDICTION BUTTON ==========
-predict_button = st.button("🔮 PREDICT MY FATE", type="primary", use_container_width=True)
+predict_button = st.button(" PREDICT MY FATE", type="primary", use_container_width=True)
 
 if predict_button:
     if model is None:
         st.error("""
-        ## ⚠️ Model Not Found!
+        ## ⚠ Model Not Found!
 
         Please run the training script first:
 
@@ -244,13 +244,13 @@ if predict_button:
         probability = model.predict_proba(input_df)[0][1]
 
     # ========== DISPLAY RESULTS ==========
-    st.header("🎯 Prediction Results")
+    st.header("Prediction Results")
 
     # Result box
     if prediction == 1:
         st.markdown(
             f'<div class="prediction-box survived">'
-            f'<h2>✅ YOU SURVIVE THE DISASTER!</h2>'
+            f'<h2>YOU SURVIVE THE DISASTER!</h2>'
             f'<p>You would have made it onto a lifeboat</p>'
             f'</div>',
             unsafe_allow_html=True
@@ -259,7 +259,7 @@ if predict_button:
     else:
         st.markdown(
             f'<div class="prediction-box not-survived">'
-            f'<h2>❌ YOU PERISH IN THE DISASTER</h2>'
+            f'<h2>YOU PERISH IN THE DISASTER</h2>'
             f'<p>You would not have reached a lifeboat in time</p>'
             f'</div>',
             unsafe_allow_html=True
@@ -279,7 +279,7 @@ if predict_button:
         st.metric("Confidence", f"{(1 - abs(probability - 0.5)) * 2:.0%}")
 
     # ========== FACTOR ANALYSIS ==========
-    st.subheader("📊 Factors Affecting Your Chances")
+    st.subheader("Factors Affecting Your Chances")
 
     factors_col1, factors_col2 = st.columns(2)
 
@@ -288,11 +288,11 @@ if predict_button:
 
         # Gender factor
         if "Female" in sex:
-            st.markdown("**✅ Gender Advantage**")
+            st.markdown("**Gender Advantage**")
             st.write("Women had 74% survival rate vs 19% for men")
             st.success("+30% survival chance")
         else:
-            st.markdown("**❌ Gender Disadvantage**")
+            st.markdown("**Gender Disadvantage**")
             st.write("'Women and children first' policy")
             st.error("-30% survival chance")
 
@@ -302,15 +302,15 @@ if predict_button:
         st.markdown('<div class="metric-card">', unsafe_allow_html=True)
 
         if pclass == 1:
-            st.markdown("**✅ First Class Priority**")
+            st.markdown("**First Class Priority**")
             st.write("Closest to lifeboats (63% survival)")
             st.success("+20% survival chance")
         elif pclass == 2:
-            st.markdown("**⚠️ Second Class**")
+            st.markdown("**⚠ Second Class**")
             st.write("Moderate access to lifeboats (43% survival)")
             st.warning("Neutral effect")
         else:
-            st.markdown("**❌ Third Class Disadvantage**")
+            st.markdown("** Third Class Disadvantage**")
             st.write("Far from lifeboat decks (25% survival)")
             st.error("-20% survival chance")
 
@@ -321,15 +321,15 @@ if predict_button:
         st.markdown('<div class="metric-card">', unsafe_allow_html=True)
 
         if age < 18:
-            st.markdown("**✅ Child Priority**")
+            st.markdown("** Child Priority**")
             st.write("Children were prioritized (52% survival)")
             st.success("+15% survival chance")
         elif age > 50:
-            st.markdown("**⚠️ Elderly**")
+            st.markdown("**⚠Elderly**")
             st.write("Lower mobility affected chances")
             st.warning("-10% survival chance")
         else:
-            st.markdown("**⚖️ Adult**")
+            st.markdown("**⚖ Adult**")
             st.write("Standard survival rate")
             st.info("Neutral effect")
 
@@ -339,11 +339,11 @@ if predict_button:
         st.markdown('<div class="metric-card">', unsafe_allow_html=True)
 
         if is_alone:
-            st.markdown("**⚠️ Traveling Alone**")
+            st.markdown("**⚠ Traveling Alone**")
             st.write("No family assistance during evacuation")
             st.warning("-5% survival chance")
         else:
-            st.markdown("**✅ With Family**")
+            st.markdown("** With Family**")
             st.write("Family could help reach lifeboats")
             st.success("+5% survival chance")
 
@@ -351,7 +351,7 @@ if predict_button:
 
     # ========== HISTORICAL CONTEXT ==========
     st.markdown("---")
-    st.header("📜 Historical Context")
+    st.header(" Historical Context")
 
     hist_col1, hist_col2, hist_col3, hist_col4 = st.columns(4)
 
@@ -375,7 +375,6 @@ if predict_button:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center">
-    <p><strong>Built with ❤️ using Streamlit & Random Forest Classifier</strong></p>
     <p><em>This is a machine learning prediction based on historical patterns from the 1912 Titanic disaster.</em></p>
     <p><small>Disclaimer: This is an educational demonstration. Actual historical outcomes were complex and tragic.</small></p>
 </div>
