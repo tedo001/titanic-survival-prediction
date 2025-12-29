@@ -1,11 +1,12 @@
+"""
+SIMPLE Titanic Survival Predictor - Streamlit App
+"""
 import streamlit as st
 import pandas as pd
-import numpy as np
 import joblib
 import os
-import matplotlib.pyplot as plt
 
-# Set page config
+# Page configuration
 st.set_page_config(
     page_title="Titanic Survival Predictor",
     page_icon="🚢",
@@ -14,108 +15,115 @@ st.set_page_config(
 
 # Title
 st.title("🚢 Titanic Survival Prediction")
-st.markdown("Predict whether a passenger would have survived the Titanic disaster")
-
-# Sidebar for model info
-with st.sidebar:
-    st.header("Model Information")
-
-    if os.path.exists('models/random_forest_model.pkl'):
-        st.success("✅ Model is loaded")
-        if os.path.exists('reports/feature_importance.png'):
-            st.image('reports/feature_importance.png', caption='Feature Importance')
-    else:
-        st.warning("⚠️ Model not found")
-        st.info("Run `python train_model.py` first to train the model")
+st.markdown("### Will You Survive the Titanic Disaster?")
 
 
 # Check if model exists
+@st.cache_resource
 def load_model():
-    model_path = 'models/random_forest_model.pkl'
+    try:
+        model = joblib.load('models/random_forest_model.pkl')
+        return model
+    except:
+        st.error("⚠️ Model not found. Please run `python simple_train.py` first.")
+        return None
 
-    if os.path.exists(model_path):
-        return joblib.load(model_path)
+
+@st.cache_resource
+def load_features():
+    try:
+        features = joblib.load('models/feature_names.pkl')
+        return features
+    except:
+        return ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare',
+                'FamilySize', 'IsAlone', 'Embarked_Q', 'Embarked_S']
+
+
+# Load model and features
+model = load_model()
+features = load_features()
+
+# Sidebar with instructions
+with st.sidebar:
+    st.header("Instructions")
+    st.markdown("""
+    1. Fill in passenger details
+    2. Click **Predict Survival**
+    3. See your predicted fate!
+
+    **Historical Facts:**
+    - Women had 74% survival rate
+    - 1st class had 63% survival rate
+    - Children had priority in lifeboats
+    """)
+
+    if model:
+        st.success("✅ Model loaded")
     else:
-        st.error("Model file not found! Please train the model first.")
-        st.stop()
+        st.warning("❌ Model not found")
 
+# Main input form
+st.header("📝 Passenger Details")
 
-# Load model
-try:
-    model = load_model()
-    # Load feature names if available
-    if os.path.exists('models/feature_names.pkl'):
-        feature_names = joblib.load('models/feature_names.pkl')
-    else:
-        feature_names = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare',
-                         'FamilySize', 'IsAlone', 'Embarked_Q', 'Embarked_S']
-except:
-    model = None
-    feature_names = []
-
-# Input form
-st.header("📝 Passenger Information")
-
+# Create columns for better layout
 col1, col2 = st.columns(2)
 
 with col1:
     pclass = st.selectbox(
         "Passenger Class",
         [1, 2, 3],
-        help="1st class had the highest survival rate"
+        help="1st class had the best survival chances"
     )
 
     sex = st.selectbox(
         "Gender",
         ["Female", "Male"],
-        help="Women had priority in lifeboats"
+        index=0
     )
 
     age = st.slider(
         "Age",
-        0, 100, 30,
-        help="Children and elderly had different survival rates"
+        0, 100, 30
     )
 
 with col2:
     sibsp = st.number_input(
-        "Number of Siblings/Spouses",
+        "Siblings/Spouses",
         0, 8, 0,
-        help="Siblings or spouses aboard"
+        help="Traveling with family?"
     )
 
     parch = st.number_input(
-        "Number of Parents/Children",
-        0, 6, 0,
-        help="Parents or children aboard"
+        "Parents/Children",
+        0, 6, 0
     )
 
     fare = st.slider(
         "Ticket Fare (£)",
         0, 500, 50,
-        help="Higher fare often meant better class/location"
+        help="Higher fare = better location on ship"
     )
 
-    embarked = st.selectbox(
-        "Port of Embarkation",
-        ["Southampton", "Cherbourg", "Queenstown"],
-        help="S = Southampton, C = Cherbourg, Q = Queenstown"
-    )
+# Embarkation port
+embarked = st.selectbox(
+    "Embarked From",
+    ["Southampton", "Cherbourg", "Queenstown"]
+)
 
 # Predict button
-if st.button("🚀 Predict Survival", type="primary"):
+if st.button("🔮 Predict My Fate", type="primary", use_container_width=True):
     if model is None:
-        st.error("Model not available. Please train the model first.")
+        st.error("Please train the model first (run simple_train.py)")
     else:
         # Preprocess input
-        sex_encoded = 1 if sex == "Male" else 0
+        sex_code = 0 if sex == "Female" else 1
         family_size = sibsp + parch + 1
         is_alone = 1 if family_size == 1 else 0
 
         # Prepare input data
         input_data = {
             'Pclass': pclass,
-            'Sex': sex_encoded,
+            'Sex': sex_code,
             'Age': age,
             'SibSp': sibsp,
             'Parch': parch,
@@ -129,82 +137,101 @@ if st.button("🚀 Predict Survival", type="primary"):
         # Convert to DataFrame
         input_df = pd.DataFrame([input_data])
 
-        # Ensure all features are present and in correct order
-        for feature in feature_names:
+        # Make sure all features are present
+        for feature in features:
             if feature not in input_df.columns:
                 input_df[feature] = 0
 
-        input_df = input_df[feature_names]
+        # Reorder columns to match training
+        input_df = input_df[features]
 
         # Make prediction
         prediction = model.predict(input_df)[0]
         probability = model.predict_proba(input_df)[0][1]
 
-        # Display results
-        st.header("📊 Prediction Results")
+        # Display result
+        st.header("🎯 Prediction Result")
 
-        col1, col2 = st.columns(2)
+        if prediction == 1:
+            st.success(f"""
+            ## ✅ YOU SURVIVE!
 
-        with col1:
-            if prediction == 1:
-                st.success(f"## ✅ SURVIVED")
-                st.metric("Survival Probability", f"{probability:.1%}")
-            else:
-                st.error(f"## ❌ DID NOT SURVIVE")
-                st.metric("Survival Probability", f"{probability:.1%}")
+            **Survival Probability:** {probability:.1%}
 
-        with col2:
-            # Show influencing factors
-            st.subheader("Key Factors")
+            You would have been one of the lucky ones to make it onto a lifeboat.
+            """)
+        else:
+            st.error(f"""
+            ## ❌ YOU PERISH
 
-            factors = []
-            if sex == "Female":
-                factors.append("✅ Female (higher survival rate)")
-            else:
-                factors.append("❌ Male (lower survival rate)")
+            **Survival Probability:** {probability:.1%}
 
-            if pclass == 1:
-                factors.append("✅ 1st Class (highest priority)")
-            elif pclass == 2:
-                factors.append("⚠️ 2nd Class (moderate chances)")
-            else:
-                factors.append("❌ 3rd Class (lowest priority)")
+            Sadly, you would not have made it onto a lifeboat in time.
+            """)
 
-            if age < 18:
-                factors.append("✅ Child ('women and children first')")
-            elif age > 50:
-                factors.append("⚠️ Elderly (lower mobility)")
+        # Show influencing factors
+        st.subheader("📊 What Affected Your Chances:")
 
-            if is_alone:
-                factors.append("⚠️ Traveling alone")
-            else:
-                factors.append("✅ With family")
+        factors = []
 
-            for factor in factors:
-                st.write(factor)
+        # Gender factor
+        if sex == "Female":
+            factors.append("✅ **Female** - Women had priority in lifeboats")
+        else:
+            factors.append("❌ **Male** - 'Women and children first' policy")
 
-# Historical facts
+        # Class factor
+        if pclass == 1:
+            factors.append("✅ **First Class** - Closest to lifeboats")
+        elif pclass == 2:
+            factors.append("⚠️ **Second Class** - Moderate chances")
+        else:
+            factors.append("❌ **Third Class** - Far from lifeboat decks")
+
+        # Age factor
+        if age < 18:
+            factors.append("✅ **Child** - Priority evacuation")
+        elif age > 50:
+            factors.append("⚠️ **Elderly** - Lower mobility")
+
+        # Family factor
+        if is_alone:
+            factors.append("⚠️ **Traveling Alone** - No family to help")
+        else:
+            factors.append("✅ **With Family** - Better support system")
+
+        # Fare factor
+        if fare > 100:
+            factors.append("✅ **High Fare** - Likely better cabin location")
+
+        for factor in factors:
+            st.write(factor)
+
+# Historical context
 st.markdown("---")
-st.header("📜 Historical Facts")
+st.header("📜 Historical Context")
 
-facts = [
-    "**Overall Survival Rate**: 31.9% (710 of 2,224 passengers)",
-    "**Women's Survival**: 74.2% of women survived vs 18.9% of men",
-    "**Class Matters**: 62.9% of 1st class survived vs 25.2% of 3rd class",
-    "**Children First**: 52.3% of children survived",
-    "**The Captain**: Captain Smith went down with the ship"
-]
+col1, col2, col3 = st.columns(3)
 
-for fact in facts:
-    st.write(f"• {fact}")
+with col1:
+    st.metric("Total Passengers", "2,224")
+    st.caption("Aboard the Titanic")
+
+with col2:
+    st.metric("Survivors", "710")
+    st.caption("31.9% survival rate")
+
+with col3:
+    st.metric("Fatalities", "1,514")
+    st.caption("68.1% perished")
 
 # Footer
 st.markdown("---")
 st.markdown(
     """
     <div style='text-align: center'>
-        <p>Built with ❤️ using Streamlit | Random Forest Classifier</p>
-        <p><small>Note: This is a machine learning prediction based on historical patterns.</small></p>
+        <p><em>Built with Streamlit • Random Forest Classifier • Titanic Dataset</em></p>
+        <p><small>This is a predictive model based on historical patterns, not actual fate.</small></p>
     </div>
     """,
     unsafe_allow_html=True
