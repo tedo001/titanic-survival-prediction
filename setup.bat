@@ -18,7 +18,7 @@ python simple_train.py
 
 echo Starting Streamlit app...
 echo.
-echo 🚀 The app will open in your browser at:
+echo The app will open in your browser at:
 echo http://localhost:8501
 echo.
 echo Press any key to continue...
