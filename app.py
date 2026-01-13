@@ -1,5 +1,5 @@
 """
-TITANIC SURVIVAL PREDICTOR - Streamlit App
+TITANIC SURVIVAL PREDICTOR 
 """
 import streamlit as st
 import pandas as pd
@@ -239,11 +239,9 @@ if predict_button:
         # Reorder to match training
         input_df = input_df[features]
 
-        # ========== MAKE PREDICTION ==========
         prediction = model.predict(input_df)[0]
         probability = model.predict_proba(input_df)[0][1]
 
-    # ========== DISPLAY RESULTS ==========
     st.header("Prediction Results")
 
     # Result box
@@ -278,7 +276,7 @@ if predict_button:
     with col_prob3:
         st.metric("Confidence", f"{(1 - abs(probability - 0.5)) * 2:.0%}")
 
-    # ========== FACTOR ANALYSIS ==========
+    # ========== facro ANALYSIS ==========
     st.subheader("Factors Affecting Your Chances")
 
     factors_col1, factors_col2 = st.columns(2)
@@ -371,11 +369,11 @@ if predict_button:
         st.metric("Water Temperature", "-2°C")
         st.caption("Fatal within 15-30 minutes")
 
-# ========== FOOTER ==========
+
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center">
-    <p><em>This is a machine learning prediction based on historical patterns from the 1912 Titanic disaster.</em></p>
-    <p><small>Disclaimer: This is an educational demonstration. Actual historical outcomes were complex and tragic.</small></p>
+    <p><em>This is a machine learning prediction model based on historical patterns from the 1912 Titanic disaster.</em></p>
+    <p><small>Disclaimer: This is an educational demonstration only. Actual historical outcomes were complex and tragic.</small></p>
 </div>
 """, unsafe_allow_html=True)
