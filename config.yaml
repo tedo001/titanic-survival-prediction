@@ -1,7 +1,7 @@
 # Project Configuration
 project:
   name: "Titanic Survival Prediction"
-  author: "tedo"
+  author: "tedo001"
   version: "1.0.0"
 
 # Paths
