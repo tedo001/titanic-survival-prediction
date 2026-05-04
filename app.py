@@ -1,5 +1,5 @@
 """
-TITANIC SURVIVAL PREDICTOR 
+TITANIC SURVIVAL PREDICTOR which used to predict the titanic survival 
 """
 import streamlit as st
 import pandas as pd
